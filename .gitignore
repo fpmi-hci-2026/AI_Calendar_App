@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Секреты и окружение
+.env
+.env.local
+*.key
+*.pem
+
+# Временные и сгенерированные файлы
+*.log
+*.tmp
+docx_assets/*.docx   # если это генерируемые файлы, а не исходники
+# но если docx_assets — исходные материалы, оставьте их
+
+# Если не хотите коммитить PDF, сгенерированные из TEX
+*.pdf
+!docs/*.pdf          # исключение, если PDF в docs нужны
+
+# Miro, Figma экспорты (если есть)
+*.fig
+*.miro
+
+# Next.js
+.next/
+out/

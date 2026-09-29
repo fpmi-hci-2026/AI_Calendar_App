@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: planner_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: planner
+      POSTGRES_PASSWORD: planner
+      POSTGRES_DB: planner_db
+    ports:
+      - "5432:5432"           # пробрасываем порт, чтобы можно было подключиться любым клиентом
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # данные сохраняются между перезапусками
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U planner -d planner_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── FastAPI Backend ─────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: planner_backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"           # Swagger UI: http://localhost:8000/docs
+    volumes:
+      - ./backend:/app        # hot-reload: изменения кода сразу применяются
+    depends_on:
+      postgres:
+        condition: service_healthy  # стартует только когда PostgreSQL готов
+
+volumes:
+  postgres_data:
+
+# Фронтенд (Next.js) запускается отдельно: cd frontend && npm run dev
+# Он доступен на http://localhost:3000 и обращается к backend на http://localhost:8000
